@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,9 @@
   "homepage": "https://github.com/mahithamadhira/peerlearnapi#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "knex": "^3.1.0",
+    "nodemon": "^3.1.9"
   }
 }
