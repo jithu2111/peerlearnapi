@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+
+
 const insert = require('../../services/auth/controllers/insert');
 const fetch = require('../../services/auth/models/fetch');
 const update = require('../../services/auth/models/update');
@@ -111,5 +113,12 @@ router.delete('/assignments/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+const authService = require('../services/auth');
+
+// Example routes
+router.post('/login', authService.login);
+router.post('/signup', authService.signup);
+
 
 module.exports = router;
