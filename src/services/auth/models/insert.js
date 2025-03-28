@@ -1,9 +1,23 @@
 const knex = require('../../../config/db');
+const bcrypt = require('bcrypt');
 
 // Insert a new user
-const insertUser = (name, email, role, password) => {
+const insertUser =  async (name, email, role, password) => {
+    console.log(name, email, role, password);
+    const validRoles = ["Student", "Grader", "Instructor"];
+    if (!validRoles.includes(role)) {
+        throw new Error('Invalid role. Valid roles are: Student, Grader, Instructor.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     return knex('users')
-        .insert({ name, email, role, password })
+        .insert({
+            name,
+            email,
+            role,
+            password: hashedPassword,
+            isdeleted: false })
         .returning(['userid', 'name', 'email', 'role']);
 };
 
@@ -16,6 +30,7 @@ const insertCourse = (courseName, instructorID, startDate, endDate, isArchived) 
             startdate: startDate,
             enddate: endDate,
             isarchived: isArchived,
+            isdeleted: false,
         })
         .returning(['courseid', 'coursename', 'instructorid', 'startdate', 'enddate', 'isarchived']);
 };
@@ -30,6 +45,7 @@ const insertAssignment = (courseId, title, description, deadline, maxScore, weig
             deadline,
             maxscore: maxScore,
             weightage,
+            isdeleted: false,
         })
         .returning(['assignid', 'courseid', 'title', 'description', 'deadline', 'maxscore', 'weightage']);
 };

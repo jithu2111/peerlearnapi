@@ -2,29 +2,36 @@ const express = require('express');
 const router = express.Router();
 
 
-const insert = require('../../services/auth/controllers/insert');
-const fetch = require('../../services/auth/models/fetch');
-const update = require('../../services/auth/models/update');
-const del = require('../../services/auth/models/delete');
+const insert = require('../services/auth/controllers/insert');
+const fetch = require('../services/auth/controllers/fetch');
+const update = require('../services/auth/controllers/update');
+const del = require('../services/auth/controllers/delete');
+
+const authService = require('../services/auth');
 
 // Insert Routes
-router.post('/users', async (req, res) => {
-    res.json(await insertUser(req.body))
-});
+router.post('/insertUser', async (req, res) => {
+    const result = await insert.insertUser(req.body);  // Call insertUser function
 
-router.post('/courses', async (req, res) => {
+    if (result.error) {
+        return res.status(result.status).json({ error: result.error });
+    }
+
+    return res.status(result.status).json(result.data);});
+
+router.post('/insertCourse', async (req, res) => {
     try {
-        const course = await insert.insertCourse(req.body.courseName, req.body.instructorID, req.body.startDate, req.body.endDate, req.body.isArchived);
-        res.json(course);
+        const course = await insert.insertCourse(req.body, res);
+        return course;
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-router.post('/assignments', async (req, res) => {
+router.post('/insertAssignment', async (req, res) => {
     try {
-        const assignment = await insert.insertAssignment(req.body.courseId, req.body.title, req.body.description, req.body.deadline, req.body.maxScore, req.body.weightage);
-        res.json(assignment);
+        const assignment = await insert.insertAssignment(req, res);
+        return assignment;
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,7 +40,7 @@ router.post('/assignments', async (req, res) => {
 // Fetch Routes
 router.get('/users/:id', async (req, res) => {
     try {
-        const user = await fetch.fetchUser(req.params.id);
+        const user = await fetch.fetchUserById(req, res);
         res.json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -42,7 +49,7 @@ router.get('/users/:id', async (req, res) => {
 
 router.get('/courses/:id', async (req, res) => {
     try {
-        const course = await fetch.fetchCourse(req.params.id);
+        const course = await fetch.fetchCoursesByUser(req,res);
         res.json(course);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -51,7 +58,7 @@ router.get('/courses/:id', async (req, res) => {
 
 router.get('/assignments/:id', async (req, res) => {
     try {
-        const assignment = await fetch.fetchAssignment(req.params.id);
+        const assignment = await fetch.fetchAssignments(req,res);
         res.json(assignment);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -113,8 +120,6 @@ router.delete('/assignments/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-const authService = require('../services/auth');
 
 // Example routes
 router.post('/login', authService.login);

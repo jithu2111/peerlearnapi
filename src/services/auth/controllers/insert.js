@@ -1,27 +1,33 @@
 const insert = require('../models/insert');
 const logger = require('../../../config/logger');
+const fetch = require('../models/fetch');
 
 // Insert a new user
-const insertUser = async (req, res) => {
-    const { name, email, role, password } = req.body;
+const insertUser = async (name, email, role, password) => {
 
     try {
         const user = await insert.insertUser(name, email, role, password);
         logger.info(`User inserted: ${user[0].userid}`);
-        res.status(201).json(user[0]);
+        return {
+            status: 201,
+            data: user[0],
+        };
     } catch (error) {
         logger.error(`Error inserting user: ${error.message}`);
-        res.status(500).json({ error: error.message });
+        return {
+            status: 500,
+            error: error.message,
+        };
     }
 };
 
 // Insert a new course
-const insertCourse = async (req, res) => {
-    const { courseName, instructorID, startDate, endDate, isArchived } = req.body;
+const insertCourse = async (body, res) => {
+    const { courseName, instructorID, startDate, endDate, isArchived } = body;
 
     try {
         // Validate that the instructor exists and is an Instructor
-        const instructor = await require('../models/fetch').fetchUserById(instructorID);
+        const instructor = await fetch.fetchUserById(instructorID);
         if (!instructor) {
             return res.status(404).json({ error: 'Instructor not found' });
         }
@@ -44,13 +50,16 @@ const insertAssignment = async (req, res) => {
 
     try {
         // Validate that the course exists
-        const course = await require('../models/fetch').fetchCourses().where({ courseid: courseId }).first();
+        const course = await fetch.fetchCourses().where({ courseid: courseId }).first();
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
 
+        //@TODO: remove this after developing auth module
+        const userID = course.instructorid
+        const userRole = "Instructor";
         // Check if the requesting user is the instructor of the course
-        if (req.user.id !== course.instructorid && req.user.role !== 'Instructor') {
+        if (userID !== course.instructorid && userRole !== 'Instructor') {
             return res.status(403).json({ error: 'Access denied. Only the course instructor can create assignments.' });
         }
 
@@ -69,19 +78,19 @@ const insertEnrollment = async (req, res) => {
 
     try {
         // Validate that the user exists
-        const user = await require('../models/fetch').fetchUserById(userId);
+        const user = await fetch.fetchUserById(userId);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
         // Validate that the course exists
-        const course = await require('../models/fetch').fetchCourses().where({ courseid: courseId }).first();
+        const course = await fetch.fetchCourses().where({ courseid: courseId }).first();
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
 
         // Check if the user is already enrolled
-        const existingEnrollment = await require('../models/fetch')
+        const existingEnrollment = await fetch
             .fetchEnrollmentsByUser(userId)
             .where({ courseid: courseId })
             .first();

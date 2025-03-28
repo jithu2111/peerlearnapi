@@ -72,7 +72,7 @@ const fetchCourses = async (req, res) => {
 // Fetch assignments for a specific course (accessible to enrolled students or the course instructor)
 const fetchAssignments = async (req, res) => {
     const { courseId } = req.params;
-    const requestingUser = req.user;
+    // const requestingUser = req.user;
 
     try {
         const course = await fetch.fetchCourses().where({ courseid: courseId }).first();
@@ -81,9 +81,9 @@ const fetchAssignments = async (req, res) => {
         }
 
         const enrollment = await fetch.fetchEnrollmentsByUser(requestingUser.id).where({ courseid: courseId }).first();
-        if (!enrollment && requestingUser.id !== course.instructorid && requestingUser.role !== 'Instructor') {
-            return res.status(403).json({ error: 'Access denied. You must be enrolled in the course or be the instructor.' });
-        }
+        // if (!enrollment && requestingUser.id !== course.instructorid && requestingUser.role !== 'Instructor') {
+        //     return res.status(403).json({ error: 'Access denied. You must be enrolled in the course or be the instructor.' });
+        // }
 
         const assignments = await fetch.fetchAssignments(courseId);
         res.json(assignments);
@@ -94,7 +94,7 @@ const fetchAssignments = async (req, res) => {
 };
 
 // Fetch enrollments for a specific user (accessible to the user themselves or Instructors)
-const getUserEnrollments = async (req, res) => {
+const fetchStudentsByCourseId = async (req, res) => {
     const { userId } = req.params;
     const requestingUser = req.user;
 
@@ -111,8 +111,15 @@ const getUserEnrollments = async (req, res) => {
     }
 };
 
+const fetchCoursesByUser = async (req, res) => {
+    const { userId } = req.params;
+    // const userId = req.user;
+
+    const courses = await fetch.fetchCoursesByUserId(userId);
+
+}
 // For internal use (e.g., in auth service for login)
-const fetchUserByEmail = async ({ email }) => {
+const fetchUserByEmail = async ({ email } ) => {
     try {
         const user = await fetch.fetchUserByEmail(email);
         return user;
@@ -123,11 +130,11 @@ const fetchUserByEmail = async ({ email }) => {
 };
 
 module.exports = {
-    fetchUsers,
     fetchUserById,
     fetchUsersByRole,
     fetchCourses,
     fetchAssignments,
-    getUserEnrollments,
+    fetchStudentsByCourseId,
+    fetchCoursesByUser,
     fetchUserByEmail,
 };
