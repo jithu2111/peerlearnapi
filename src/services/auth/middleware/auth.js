@@ -2,9 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const authenticateToken = (req, res) => {
+const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const expiresIn = '1h';
     const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
 
     if (!token) {
@@ -13,10 +12,10 @@ const authenticateToken = (req, res) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        console.log(decoded);
-        req.body.user = decoded; // Attach user info (id, role) to the request
-        console.log(req);
-        return res.status(200).json(req.body.user);
+        console.log('Decoded JWT:', decoded);
+
+        req.user = decoded; // Attach user info (id, role) to the request
+        next(); // Call next() to pass control to the next middleware or route handler
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({ error: 'Token has expired' });

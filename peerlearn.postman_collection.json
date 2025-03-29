@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "0e949599-467b-4c9f-a879-1fc2cd5a5680",
+		"_postman_id": "208358a8-8af9-44c4-830b-3bd1d3c358d5",
 		"name": "peerlearn",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "14874324"
+		"_exporter_id": "43426587",
+		"_collection_link": "https://prajeeth-3577699.postman.co/workspace/Prajeeth's-Workspace~151d1217-7127-48fe-8779-dbc960db83b1/collection/43426587-208358a8-8af9-44c4-830b-3bd1d3c358d5?action=share&source=collection_link&creator=43426587"
 	},
 	"item": [
 		{
@@ -11,6 +12,15 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SecurePassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "localhost:9001/api/auth/login",
 					"host": [
@@ -27,10 +37,77 @@
 			"response": []
 		},
 		{
+			"name": "insertCourse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"courseName\": \"testCourse\",\n    \"instructorID\": \"6\",\n    \"startDate\": \"2025-04-01\",\n    \"endDate\": \"2025-07-01\",\n    \"isArchived\": \"false\" \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9001/api/auth/insertCourse",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"insertCourse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertAssignment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"courseId\": 1,\n    \"title\": \"testTitle\",\n    \"description\": \"test\",\n    \"deadline\": \"2025-04-30\",\n    \"maxScore\": 100,\n    \"weightage\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9001/api/auth/insertAssignment",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"insertAssignment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "signup",
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SecurePassword123\",\n    \"role\": \"Student\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "localhost:9001/api/auth/signup",
 					"host": [
@@ -41,6 +118,166 @@
 						"api",
 						"auth",
 						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertUser",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testUser5\",\n    \"email\": \"testUser5@example.com\",\n    \"role\": \"Student\",\n    \"password\": \"Ram@8237\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/insertUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"insertUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertUser Copy",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testUser5\",\n    \"email\": \"testUser5@example.com\",\n    \"role\": \"Student\",\n    \"password\": \"Ram@8237\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/insertUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"insertUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchUser",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testUser5\",\n    \"email\": \"testUser5@example.com\",\n    \"role\": \"Student\",\n    \"password\": \"Ram@8237\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchCourse",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testUser5\",\n    \"email\": \"testUser5@example.com\",\n    \"role\": \"Student\",\n    \"password\": \"Ram@8237\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/courses/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"courses",
+						"1"
 					]
 				}
 			},

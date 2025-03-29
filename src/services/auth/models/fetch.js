@@ -54,9 +54,26 @@ const fetchEnrollmentsByUser = (userId) => {
         .select('enrollmentid', 'userid', 'courseid');
 };
 
-const fetchCoursesByUserId = (userId) => {
+const fetchCourseByUserId = async (userid) => {
+    try {
+        // Fetch courses by joining users, enrollments, and courses tables
+        const courses = await knex('enrollments')
+            .select(
+                'courses.courseid',
+                'courses.coursename',
+                'courses.startdate',
+                'courses.enddate',
+                'courses.isarchived'
+            )
+            .innerJoin('courses', 'enrollments.courseid', 'courses.courseid')
+            .where('enrollments.userId', userid);
 
-}
+        return courses;  // Array of courses the user is enrolled in
+    } catch (error) {
+        console.error('Error fetching courses for user:', error);
+        throw new Error('Error fetching courses for user');
+    }
+};
 
 module.exports = {
     fetchUsers,
@@ -66,4 +83,5 @@ module.exports = {
     fetchCourses,
     fetchAssignments,
     fetchEnrollmentsByUser,
+    fetchCourseByUserId
 };

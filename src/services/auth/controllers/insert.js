@@ -72,7 +72,7 @@ const insertAssignment = async (req, res) => {
     }
 };
 
-// Insert a new enrollment (registration)
+// Insert a new enrollment (Student registration for course)
 const insertEnrollment = async (req, res) => {
     const { userId, courseId } = req.body;
 
@@ -82,6 +82,7 @@ const insertEnrollment = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        console.log(userId, courseId);
 
         // Validate that the course exists
         const course = await fetch.fetchCourses().where({ courseid: courseId }).first();
@@ -94,14 +95,17 @@ const insertEnrollment = async (req, res) => {
             .fetchEnrollmentsByUser(userId)
             .where({ courseid: courseId })
             .first();
+        console.log(existingEnrollment);
+        console.log(userId, courseId);
         if (existingEnrollment) {
             return res.status(400).json({ error: 'User is already enrolled in this course' });
         }
 
         // Check if the requesting user is the student enrolling or an Instructor
-        if (req.user.id !== userId && req.user.role !== 'Instructor') {
+        console.log(req.user.id, req.user.role);
+        /*if (req.user.id !== userId && req.user.role !== 'Instructor') {
             return res.status(403).json({ error: 'Access denied. You can only enroll yourself or must be an Instructor.' });
-        }
+        }*/
 
         const enrollment = await insert.insertEnrollment(userId, courseId);
         logger.info(`Enrollment inserted: ${enrollment[0].enrollmentid}`);
@@ -112,9 +116,22 @@ const insertEnrollment = async (req, res) => {
     }
 };
 
+
+// Controller function to create a rubric
+const insertRubric = async (rubricData) => {
+    try {
+        const rubric = await insert.insertRubric(rubricData);
+        return rubric;  // Return the inserted rubric data with selected fields
+    } catch (error) {
+        throw new Error('Error inserting rubric: ' + error.message);
+    }
+};
+
+
 module.exports = {
     insertUser,
     insertCourse,
     insertAssignment,
     insertEnrollment,
+    insertRubric
 };
