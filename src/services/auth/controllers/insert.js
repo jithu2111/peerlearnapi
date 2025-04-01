@@ -82,7 +82,6 @@ const insertEnrollment = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        console.log(userId, courseId);
 
         // Validate that the course exists
         const course = await fetch.fetchCourses().where({ courseid: courseId }).first();
@@ -95,14 +94,12 @@ const insertEnrollment = async (req, res) => {
             .fetchEnrollmentsByUser(userId)
             .where({ courseid: courseId })
             .first();
-        console.log(existingEnrollment);
-        console.log(userId, courseId);
         if (existingEnrollment) {
             return res.status(400).json({ error: 'User is already enrolled in this course' });
         }
 
         // Check if the requesting user is the student enrolling or an Instructor
-        console.log(req.user.id, req.user.role);
+
         /*if (req.user.id !== userId && req.user.role !== 'Instructor') {
             return res.status(403).json({ error: 'Access denied. You can only enroll yourself or must be an Instructor.' });
         }*/
@@ -113,6 +110,29 @@ const insertEnrollment = async (req, res) => {
     } catch (error) {
         logger.error(`Error inserting enrollment: ${error.message}`);
         res.status(500).json({ error: error.message });
+    }
+};
+
+// Controller function to create a criteria
+const insertCriteria = async (criteriaData) => {
+    try {
+        const criteria = await insert.insertCriteria(criteriaData);
+        return criteria;  // Return the inserted criteria data
+    } catch (error) {
+        throw new Error('Error inserting criteria: ' + error.message);
+    }
+};
+
+// Controller function to create a submission
+const insertSubmission = async (submissionData) => {
+    try {
+        const submission = await insert.insertSubmission(submissionData);
+        return {
+            submission,
+            assignedReviewers
+        };
+    } catch (error) {
+        throw new Error('Error inserting submission: ' + error.message);
     }
 };
 
@@ -127,11 +147,22 @@ const insertRubric = async (rubricData) => {
     }
 };
 
+const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
+    try {
+        const result = await insert.insertAssignmentWithRubrics(assignmentData, rubricsData);
+        return result;
+    } catch (error) {
+        throw new Error('Error inserting assignment with rubrics: ' + error.message);
+    }
+};
 
 module.exports = {
     insertUser,
     insertCourse,
     insertAssignment,
     insertEnrollment,
-    insertRubric
+    insertCriteria,
+    insertSubmission,
+    insertRubric,
+    insertAssignmentWithRubrics
 };
