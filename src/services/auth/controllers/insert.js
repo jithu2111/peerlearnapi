@@ -22,8 +22,9 @@ const insertUser = async (name, email, role, password) => {
 };
 
 // Insert a new course
-const insertCourse = async (body, res) => {
-    const { courseName, instructorID, startDate, endDate, isArchived } = body;
+const insertCourse = async (req, res) => {
+    const { courseName, startDate, endDate, isArchived } = req.body;
+    const instructorID = req.user.id;
 
     try {
         // Validate that the instructor exists and is an Instructor

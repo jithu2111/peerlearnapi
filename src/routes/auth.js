@@ -21,9 +21,9 @@ router.post('/insertUser', async (req, res) => {
     return res.status(result.status).json(result.data);
 });
 
-router.post('/insertCourse', async (req, res) => {
+router.post('/insertCourse', authenticate, async (req, res) => {
     try {
-        const course = await insert.insertCourse(req.body, res);
+        const course = await insert.insertCourse(req, res);
         return course;
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -67,15 +67,6 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 
-router.get('/courses/:id', async (req, res) => {
-    try {
-        const course = await fetch.fetchCoursesByUserId(req,res);
-        res.json(course);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
 router.get('/assignments/:id', async (req, res) => {
     try {
         const assignment = await fetch.fetchAssignments(req,res);
@@ -85,10 +76,10 @@ router.get('/assignments/:id', async (req, res) => {
     }
 });
 
-router.get('/fetchcoursesbyuserid/:userid', async (req, res) => {
+router.get('/fetchcoursesbyuserid', authenticate, async (req, res) => {
     try {
-        const { userid } = req.params;
-        const courses = await fetch.fetchCoursesByUserId({ userid });
+        //fetch authorization token from headers
+        const courses = await fetch.fetchCoursesByUserId(req,res);
         if (!courses || courses.length === 0) {
             return res.status(404).json({ message: 'No courses found for the given user ID' });
         }
