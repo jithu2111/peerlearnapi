@@ -24,3 +24,8 @@
 {"level":"error","message":"Error inserting user: Invalid role. Valid roles are: student, grader, instructor.","timestamp":"2025-03-28T15:53:43.990Z"}
 {"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-03-28T15:54:51.796Z"}
 {"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-03-28T15:56:48.597Z"}
+{"level":"error","message":"Error inserting enrollment: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T15:26:51.086Z"}
+{"level":"error","message":"Error inserting enrollment: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T15:40:24.449Z"}
+{"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:01:57.895Z"}
+{"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:37.071Z"}
+{"level":"error","message":"Error fetching user by ID 14: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:48.482Z"}

@@ -111,13 +111,8 @@ const fetchStudentsByCourseId = async (req, res) => {
     }
 };
 
-const fetchCoursesByUser = async (req, res) => {
-    const { userId } = req.params;
-    // const userId = req.user;
 
-    const courses = await fetch.fetchCoursesByUserId(userId);
 
-}
 // For internal use (e.g., in auth service for login)
 const fetchUserByEmail = async ({ email } ) => {
     try {
@@ -129,12 +124,26 @@ const fetchUserByEmail = async ({ email } ) => {
     }
 };
 
+const fetchCoursesByUserId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const course = await fetch.fetchCourseByUserId(id);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+        res.status(200).json(course);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+
 module.exports = {
     fetchUserById,
     fetchUsersByRole,
     fetchCourses,
     fetchAssignments,
     fetchStudentsByCourseId,
-    fetchCoursesByUser,
+    fetchCoursesByUserId,
     fetchUserByEmail,
 };

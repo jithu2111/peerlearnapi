@@ -60,9 +60,26 @@ const insertEnrollment = (userId, courseId) => {
         .returning(['enrollmentid', 'userid', 'courseid']);
 };
 
+
+//Create a new rubric
+const insertRubric = async (rubricData) => {
+    try {
+
+        const [rubric] = await knex('rubrics')
+            .insert(rubricData)
+            .returning(['rubricId', 'assignmentId', 'criteriaId', 'weightage']);
+
+        return rubric;  // Return the inserted rubric with the specified fields
+    } catch (error) {
+        throw new Error('Error inserting rubric: ' + error.message);
+    }
+};
+
+
 module.exports = {
     insertUser,
     insertCourse,
     insertAssignment,
     insertEnrollment,
+    insertRubric
 };

@@ -30,3 +30,13 @@
 {"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-03-28T15:54:51.796Z"}
 {"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-03-28T15:56:48.597Z"}
 {"level":"info","message":"User inserted: 15","timestamp":"2025-03-28T15:58:22.479Z"}
+{"level":"error","message":"Error inserting enrollment: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T15:26:51.086Z"}
+{"level":"error","message":"Error inserting enrollment: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T15:40:24.449Z"}
+{"level":"info","message":"Enrollment inserted: 1","timestamp":"2025-03-29T16:19:55.810Z"}
+{"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:01:57.895Z"}
+{"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:37.071Z"}
+{"level":"error","message":"Error fetching user by ID 14: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:48.482Z"}
+{"level":"info","message":"Enrollment inserted: 2","timestamp":"2025-03-29T17:25:03.915Z"}
+{"level":"info","message":"Enrollment inserted: 3","timestamp":"2025-03-29T17:26:25.092Z"}
+{"level":"info","message":"Enrollment inserted: 4","timestamp":"2025-03-29T17:30:16.792Z"}
+{"level":"info","message":"Enrollment inserted: 5","timestamp":"2025-03-29T17:31:07.086Z"}

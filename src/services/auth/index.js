@@ -55,7 +55,7 @@ exports.signup = async (req, res) => {
 
         // Generate a JWT token (optional, if you want to log the user in immediately after signup)
         const token = jwt.sign(
-            {id: newUser.userid, username: newUser.username},
+            {id: newUser.userid},
             process.env.JWT_SECRET,
             {expiresIn: '24h'}
         );

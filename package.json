@@ -30,6 +30,7 @@
     "knex": "^3.1.0",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.9",
+    "pg": "^8.14.1",
     "pug-cli": "^1.0.0-alpha6",
     "require": "^2.4.20",
     "util.promisify": "^1.1.3",
