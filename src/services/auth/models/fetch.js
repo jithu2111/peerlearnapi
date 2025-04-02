@@ -90,6 +90,80 @@ const fetchCourseByInstructorId = async (id) => {
     }
 }
 
+//Fetch Criteria By CourseID
+const fetchCriteriaByCourseId = async (courseid) => {
+    try {
+        // Fetch all criteria linked to the given course
+        const courseCriteria = await knex('rubrics')
+            .join('criteria', 'rubrics.criteriaid', '=', 'criteria.criteriaid')
+            .select('criteria.criteriaid', 'criteria.criterianame', 'criteria.description')
+            .where('rubrics.assignid', 'in', function () {
+                this.select('assignid').from('assignments').where('courseid', courseid);
+            })
+            .groupBy('criteria.criteriaid', 'criteria.criterianame', 'criteria.description');
+
+        // Fetch the "total_review_score" criteria separately
+        const totalReviewScore = await knex('criteria')
+            .select('criteriaid', 'criterianame', 'description')
+            .where('criterianame', 'total_review_score')
+            .first();
+
+        // Ensure "total_review_score" is included in the results
+        if (!courseCriteria.some(c => c.criterianame === 'total_review_score') && totalReviewScore) {
+            courseCriteria.push(totalReviewScore);
+        }
+
+        return courseCriteria;
+    } catch (error) {
+        throw new Error('Error fetching criteria: ' + error.message);
+    }
+};
+
+const fetchRubricByAssignmentId = async (assignmentid) => {
+    try {
+        // Fetch all rubrics linked to the given assignment
+        const rubrics = await knex('rubrics')
+            .join('criteria', 'rubrics.criteriaid', '=', 'criteria.criteriaid')
+            .select(
+                'rubrics.rubricid',
+                'rubrics.assignmentid',
+                'criteria.criteriaid',
+                'criteria.criterianame',
+                'criteria.description',
+                'rubrics.weightage'
+            )
+            .where('rubrics.assignmentId', assignmentid);
+
+        return rubrics;
+    } catch (error) {
+        throw new Error('Error fetching rubrics: ' + error.message);
+    }
+};
+
+const fetchRubricsByCourseID = async (courseid) => {
+    try {
+        // Fetch all rubrics linked to assignments in the given course
+        const rubrics = await knex('rubrics')
+            .join('criteria', 'rubrics.criteriaid', '=', 'criteria.criteriaid')
+            .join('assignments', 'rubrics.assignmentId', '=', 'assignments.assignmentId')
+            .select(
+                'rubrics.rubricId',
+                'rubrics.assignmentId',
+                'assignments.assignmentName',
+                'criteria.criteriaid',
+                'criteria.criterianame',
+                'criteria.description',
+                'rubrics.weightage'
+            )
+            .where('assignments.courseId', courseid)
+            .orderBy('assignments.assignmentId');
+
+        return rubrics;
+    } catch (error) {
+        throw new Error('Error fetching rubrics: ' + error.message);
+    }
+};
+
 module.exports = {
     fetchUsers,
     fetchUserById,
@@ -100,4 +174,7 @@ module.exports = {
     fetchEnrollmentsByUser,
     fetchCourseByUserId,
     fetchCourseByInstructorId
+    fetchCriteriaByCourseId,
+    fetchRubricByAssignmentId,
+    fetchRubricsByCourseID
 };

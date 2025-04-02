@@ -11,7 +11,7 @@ const authenticate = require('../services/auth/middleware/auth');
 const authService = require('../services/auth');
 
 // Insert Routes
-router.post('/insertUser', async (req, res) => {
+router.post('/insertUser', authenticate, async (req, res) => {
     const result = await insert.insertUser(req.body);  // Call insertUser function
 
     if (result.error) {
@@ -30,7 +30,7 @@ router.post('/insertCourse', authenticate, async (req, res) => {
     }
 });
 
-router.post('/insertRubric', async (req, res) => {
+router.post('/insertRubric', authenticate, async (req, res) => {
     try {
         const rubric = await insert.insertRubric(req.body);
         return res.status(201).json(rubric);  // Send the inserted rubric back with 201 status
@@ -39,10 +39,43 @@ router.post('/insertRubric', async (req, res) => {
     }
 });
 
-router.post('/insertAssignment', async (req, res) => {
+router.post('/insertAssignment', authenticate, async (req, res) => {
     try {
         const assignment = await insert.insertAssignment(req, res);
         return assignment;
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/createCriteria', authenticate, async (req, res) => {
+    try {
+        const criteria = await insert.insertCriteria(req.body);  // Pass the request body to the controller
+        return res.status(201).json(criteria);  // Return the inserted criteria with 201 status
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/createSubmission', authenticate, async (req, res) => {
+    try {
+        const result = await insert.insertSubmission(req.body);
+        res.status(201).json({
+            message: 'Submission created successfully',
+            file: result.submission.file,
+            grade: result.submission.grade,
+            reviews: result.assignedReviewers
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+router.post('/createAssignmentWithRubrics', authenticate, async (req, res) => {
+    try {
+        const { assignment, rubrics } = req.body;
+        const result = await insert.insertAssignmentWithRubrics(assignment, rubrics);
+        return res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -58,7 +91,7 @@ router.post('/registerCourse', authenticate, async (req, res) => {  // Now your 
 });
 
 // Fetch Routes
-router.get('/users/:id', async (req, res) => {
+router.get('/users/:id', authenticate, async (req, res) => {
     try {
         const user = await fetch.fetchUserById(req, res);
         res.json(user);
@@ -67,7 +100,8 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 
-router.get('/assignments/:id', async (req, res) => {
+
+router.get('/assignments/:id', authenticate, async (req, res) => {
     try {
         const assignment = await fetch.fetchAssignments(req,res);
         res.json(assignment);
@@ -89,9 +123,44 @@ router.get('/fetchcoursesbyuserid', authenticate, async (req, res) => {
     }
 });
 
+// Route to fetch criteria by courseId, including "total_review_score"
+router.get('/getCriteriaByCourseId/:courseid', authenticate, async (req, res) => {
+    try {
+        const { courseid } = req.params;
+        const criteria = await fetch.fetchCriteriaByCourseId(courseid);
+        return res.status(200).json(criteria);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+
+// Route to fetch rubrics by assignmentId
+router.get('/getRubricByAssignmentId/:assignmentid', authenticate, async (req, res) => {
+    try {
+        const { assignmentId } = req.params;
+        const rubrics = await fetch.getRubricByAssignmentId(assignmentId);
+        return res.status(200).json(rubrics);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to fetch Rubrics by courseId
+router.get('/getRubricsByCourseID/:courseid', authenticate, async (req, res) => {
+    try {
+        const { courseid } = req.params;
+        const rubrics = await fetch.getRubricsByCourseID(courseid);
+        return res.status(200).json(rubrics);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 // Update Routes
-router.put('/users/:id', async (req, res) => {
+router.put('/users/:id', authenticate, async (req, res) => {
     try {
         const updatedUser = await update.updateUser(req.params.id, req.body);
         res.json(updatedUser);
@@ -100,7 +169,7 @@ router.put('/users/:id', async (req, res) => {
     }
 });
 
-router.put('/courses/:id', async (req, res) => {
+router.put('/courses/:id', authenticate, async (req, res) => {
     try {
         const updatedCourse = await update.updateCourse(req.params.id, req.body);
         res.json(updatedCourse);
@@ -109,7 +178,7 @@ router.put('/courses/:id', async (req, res) => {
     }
 });
 
-router.put('/assignments/:id', async (req, res) => {
+router.put('/assignments/:id', authenticate, async (req, res) => {
     try {
         const updatedAssignment = await update.updateAssignment(req.params.id, req.body);
         res.json(updatedAssignment);
@@ -119,7 +188,7 @@ router.put('/assignments/:id', async (req, res) => {
 });
 
 // Delete Routes
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', authenticate, async (req, res) => {
     try {
         await del.deleteUser(req.params.id);
         res.json({ message: 'User deleted successfully' });
@@ -128,7 +197,7 @@ router.delete('/users/:id', async (req, res) => {
     }
 });
 
-router.delete('/courses/:id', async (req, res) => {
+router.delete('/courses/:id', authenticate, async (req, res) => {
     try {
         await del.deleteCourse(req.params.id);
         res.json({ message: 'Course deleted successfully' });
@@ -137,7 +206,7 @@ router.delete('/courses/:id', async (req, res) => {
     }
 });
 
-router.delete('/assignments/:id', async (req, res) => {
+router.delete('/assignments/:id', authenticate, async (req, res) => {
     try {
         await del.deleteAssignment(req.params.id);
         res.json({ message: 'Assignment deleted successfully' });

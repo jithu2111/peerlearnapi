@@ -146,6 +146,32 @@ const fetchCoursesByUserId = async (req, res) => {
     }
 }
 
+const fetchCriteriaByCourseId = async (courseid) => {
+    try {
+        return await fetch.fetchCriteriaByCourseId(courseid);
+    } catch (error) {
+        throw new Error('Error fetching criteria: ' + error.message);
+    }
+};
+
+const getRubricByAssignmentId = async (assignmentid) => {
+    try {
+        return await fetch.fetchRubricByAssignmentId(assignmentid);
+    } catch (error) {
+        throw new Error('Error fetching rubrics: ' + error.message);
+    }
+};
+
+const getRubricsByCourseID = async (courseid) => {
+    try {
+        return await fetch.fetchRubricsByCourseID(courseid);
+    } catch (error) {
+        throw new Error('Error fetching rubrics: ' + error.message);
+    }
+};
+
+
+
 
 module.exports = {
     fetchUserById,
@@ -155,4 +181,7 @@ module.exports = {
     fetchStudentsByCourseId,
     fetchCoursesByUserId,
     fetchUserByEmail,
+    fetchCriteriaByCourseId,
+    getRubricByAssignmentId,
+    getRubricsByCourseID
 };
