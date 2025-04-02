@@ -40,3 +40,55 @@
 {"level":"info","message":"Enrollment inserted: 3","timestamp":"2025-03-29T17:26:25.092Z"}
 {"level":"info","message":"Enrollment inserted: 4","timestamp":"2025-03-29T17:30:16.792Z"}
 {"level":"info","message":"Enrollment inserted: 5","timestamp":"2025-03-29T17:31:07.086Z"}
+{"level":"info","message":"User inserted: 2","timestamp":"2025-03-29T20:04:44.353Z"}
+{"level":"info","message":"User inserted: 2","timestamp":"2025-03-29T20:06:30.712Z"}
+{"level":"info","message":"User inserted: 3","timestamp":"2025-03-29T20:06:41.064Z"}
+{"level":"info","message":"User inserted: 6","timestamp":"2025-03-30T18:16:45.718Z"}
+{"level":"info","message":"User inserted: 7","timestamp":"2025-03-30T18:17:36.833Z"}
+{"level":"info","message":"User inserted: 8","timestamp":"2025-03-30T18:17:57.943Z"}
+{"level":"info","message":"Course inserted: 1","timestamp":"2025-03-30T18:19:08.432Z"}
+{"level":"info","message":"Course inserted: 2","timestamp":"2025-03-30T18:19:49.535Z"}
+{"level":"info","message":"Course inserted: 3","timestamp":"2025-03-30T18:20:40.873Z"}
+{"level":"info","message":"User inserted: 9","timestamp":"2025-03-30T18:22:14.221Z"}
+{"level":"info","message":"User inserted: 10","timestamp":"2025-03-30T18:22:23.760Z"}
+{"level":"info","message":"User inserted: 11","timestamp":"2025-03-30T18:22:40.857Z"}
+{"level":"info","message":"User inserted: 12","timestamp":"2025-03-30T18:22:54.635Z"}
+{"level":"info","message":"User inserted: 13","timestamp":"2025-03-30T18:23:03.499Z"}
+{"level":"info","message":"User inserted: 14","timestamp":"2025-03-30T18:23:29.232Z"}
+{"level":"info","message":"User inserted: 15","timestamp":"2025-03-30T18:23:34.961Z"}
+{"level":"info","message":"User inserted: 16","timestamp":"2025-03-30T18:23:47.535Z"}
+{"level":"info","message":"User inserted: 17","timestamp":"2025-03-30T18:25:47.366Z"}
+{"level":"info","message":"User inserted: 18","timestamp":"2025-03-30T18:26:20.823Z"}
+{"level":"info","message":"Course inserted: 4","timestamp":"2025-03-30T18:26:49.320Z"}
+{"level":"info","message":"Enrollment inserted: 1","timestamp":"2025-03-30T18:31:10.704Z"}
+{"level":"info","message":"Enrollment inserted: 2","timestamp":"2025-03-30T18:35:43.571Z"}
+{"level":"info","message":"Enrollment inserted: 3","timestamp":"2025-03-30T18:35:49.312Z"}
+{"level":"info","message":"Enrollment inserted: 4","timestamp":"2025-03-30T18:36:30.910Z"}
+{"level":"info","message":"Enrollment inserted: 5","timestamp":"2025-03-30T18:36:34.738Z"}
+{"level":"info","message":"Enrollment inserted: 6","timestamp":"2025-03-30T18:36:38.210Z"}
+{"level":"info","message":"Enrollment inserted: 7","timestamp":"2025-03-30T18:36:59.004Z"}
+{"level":"info","message":"Enrollment inserted: 8","timestamp":"2025-03-30T18:37:02.494Z"}
+{"level":"info","message":"Enrollment inserted: 9","timestamp":"2025-03-30T18:37:05.778Z"}
+{"level":"info","message":"User inserted: 19","timestamp":"2025-03-30T18:38:57.155Z"}
+{"level":"info","message":"User inserted: 20","timestamp":"2025-03-30T18:39:09.553Z"}
+{"level":"info","message":"Enrollment inserted: 10","timestamp":"2025-03-30T18:40:40.267Z"}
+{"level":"info","message":"Enrollment inserted: 11","timestamp":"2025-03-30T18:40:47.115Z"}
+{"level":"info","message":"Enrollment inserted: 12","timestamp":"2025-03-30T18:40:53.514Z"}
+{"level":"info","message":"User inserted: 21","timestamp":"2025-03-30T18:41:35.949Z"}
+{"level":"info","message":"User inserted: 22","timestamp":"2025-03-30T18:41:49.466Z"}
+{"level":"info","message":"User inserted: 23","timestamp":"2025-03-30T18:41:57.415Z"}
+{"level":"info","message":"User inserted: 24","timestamp":"2025-03-30T18:42:05.370Z"}
+{"level":"info","message":"User inserted: 25","timestamp":"2025-03-30T18:42:13.963Z"}
+{"level":"info","message":"User inserted: 26","timestamp":"2025-03-30T18:42:20.202Z"}
+{"level":"info","message":"Enrollment inserted: 13","timestamp":"2025-03-30T18:44:31.766Z"}
+{"level":"info","message":"Assignment inserted: 1","timestamp":"2025-03-30T18:47:23.982Z"}
+{"level":"info","message":"Assignment inserted: 2","timestamp":"2025-03-30T18:48:30.845Z"}
+{"level":"info","message":"Assignment inserted: 3","timestamp":"2025-03-30T18:49:33.274Z"}
+{"level":"info","message":"Enrollment inserted: 14","timestamp":"2025-03-30T18:51:47.913Z"}
+{"level":"info","message":"Enrollment inserted: 15","timestamp":"2025-03-30T18:51:51.972Z"}
+{"level":"info","message":"Enrollment inserted: 16","timestamp":"2025-03-30T18:51:55.757Z"}
+{"level":"info","message":"Enrollment inserted: 17","timestamp":"2025-03-30T18:52:08.331Z"}
+{"level":"error","message":"Error fetching user by email smadhira1@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:20:43.964Z"}
+{"level":"error","message":"Error fetching user by email smadhira1@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:09.647Z"}
+{"level":"error","message":"Error fetching user by email saketh@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:51.727Z"}
+{"level":"error","message":"Error fetching user by email murali@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:25:49.756Z"}

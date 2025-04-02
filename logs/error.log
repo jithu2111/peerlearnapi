@@ -29,3 +29,7 @@
 {"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:01:57.895Z"}
 {"level":"error","message":"Error fetching user by ID 2: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:37.071Z"}
 {"level":"error","message":"Error fetching user by ID 14: Cannot read properties of undefined (reading 'id')","timestamp":"2025-03-29T17:02:48.482Z"}
+{"level":"error","message":"Error fetching user by email smadhira1@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:20:43.964Z"}
+{"level":"error","message":"Error fetching user by email smadhira1@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:09.647Z"}
+{"level":"error","message":"Error fetching user by email saketh@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:51.727Z"}
+{"level":"error","message":"Error fetching user by email murali@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:25:49.756Z"}
