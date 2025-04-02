@@ -173,7 +173,7 @@ module.exports = {
     fetchAssignments,
     fetchEnrollmentsByUser,
     fetchCourseByUserId,
-    fetchCourseByInstructorId
+    fetchCourseByInstructorId,
     fetchCriteriaByCourseId,
     fetchRubricByAssignmentId,
     fetchRubricsByCourseID
