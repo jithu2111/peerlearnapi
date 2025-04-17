@@ -130,24 +130,90 @@ const fetchRubricsByCourseID = async (courseid) => {
         // Fetch all rubrics linked to assignments in the given course
         const rubrics = await knex('rubrics')
             .join('criteria', 'rubrics.criteriaid', '=', 'criteria.criteriaid')
-            .join('assignments', 'rubrics.assignmentId', '=', 'assignments.assignmentId')
+            .join('assignments', 'rubrics.assignid', '=', 'assignments.assignid')
             .select(
-                'rubrics.rubricId',
-                'rubrics.assignmentId',
-                'assignments.assignmentName',
+                'rubrics.rubricid',
+                'rubrics.assignid',
+                'assignments.title',
                 'criteria.criteriaid',
                 'criteria.criterianame',
-                'criteria.description',
-                'rubrics.weightage'
+                'criteria.description'
             )
-            .where('assignments.courseId', courseid)
-            .orderBy('assignments.assignmentId');
+            .where('assignments.courseid', courseid)
+            .orderBy('assignments.assignid');
 
         return rubrics;
     } catch (error) {
         throw new Error('Error fetching rubrics: ' + error.message);
     }
 };
+
+const getSubmissionsToReviewByStudentID = async (userid) => {
+    try {
+
+        const rows = await knex('review')
+            .join('submissions', 'review.submissionid', '=', 'submissions.submissionid')
+            .join('users', 'submissions.userid', '=', 'users.userid')
+            .join('assignments', 'submissions.assignid', '=', 'assignments.assignid')
+            .select(
+                'submissions.submissionid',
+                'submissions.file',
+                'submissions.submissiondate',
+                'users.userid as submitter_id',
+                'users.name as submitter_name',
+                'assignments.assignid as assignment_id',
+                'assignments.title as assignment_title',
+                'assignments.description as assignment_description',
+                'review.feedback',
+                'review.score',
+                'review.reviewdate'
+            )
+            .where('review.reviewedbyid', userid);
+
+
+
+
+        return rows.map(row => ({
+            submissionid: row.submissionid,
+            file: row.file,
+            submissionDate: row.submissiondate,
+            submittedby: {
+                id: row.submitter_id,
+                name: row.submitter_name
+            },
+            assignment: {
+                id: row.assignment_id,
+                title: row.assignment_title,
+                description: row.assignment_description
+            },
+            reviewStatus: row.reviewdate ? 'Completed' : 'Pending',
+            feedback: row.feedback,
+            score: row.score
+        }));
+    } catch (error) {
+        throw new Error('Error fetching submissions to review: ' + error.message);
+    }
+    console.log('Received userid:', userid);
+
+};
+
+const getReviewsBySubmissionId = async (submissionid) => {
+    const reviews = await knex('review')
+        .join('users', 'review.reviewedbyid', '=', 'users.userid')
+        .where('review.submissionid', submissionid)
+        .select(
+            'review.reviewid',
+            'review.reviewedbyid as reviewerId',
+            'users.name as reviewerName',
+            'review.score',
+            'review.feedback',
+            'review.feedbackmedia',
+            'review.reviewdate'
+        );
+
+    return reviews;
+};
+
 
 module.exports = {
     fetchUsers,
@@ -160,5 +226,7 @@ module.exports = {
     fetchCourseByUserId,
     fetchCriteriaByCourseId,
     fetchRubricByAssignmentId,
-    fetchRubricsByCourseID
+    fetchRubricsByCourseID,
+    getSubmissionsToReviewByStudentID,
+    getReviewsBySubmissionId
 };

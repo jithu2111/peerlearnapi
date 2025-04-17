@@ -161,6 +161,32 @@ const getRubricsByCourseID = async (courseid) => {
     }
 };
 
+const getSubmissionsToReviewByUserID = async (req, res) => {
+    try {
+        const { userid } = req.body;
+
+        if (!userid) {
+            return res.status(400).json({ error: 'User ID is required.' });
+        }
+
+        const submissions = await fetch.getSubmissionsToReviewByStudentID(userid);
+        res.status(200).json(submissions);
+    } catch (error) {
+        console.error('Error fetching reviewable submissions:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+const getReviewsBySubmissionId = async (submissionid) => {
+    if (!submissionid || isNaN(Number(submissionid))) {
+        throw new Error("Submission ID must be a valid number.");
+    }
+
+    return await fetch.getReviewsBySubmissionId(submissionid);
+};
+
+
 
 
 
@@ -174,5 +200,7 @@ module.exports = {
     fetchUserByEmail,
     fetchCriteriaByCourseId,
     getRubricByAssignmentId,
-    getRubricsByCourseID
+    getRubricsByCourseID,
+    getSubmissionsToReviewByUserID,
+    getReviewsBySubmissionId
 };
