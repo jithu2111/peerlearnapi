@@ -64,11 +64,11 @@ const deleteCourse = async (req, res) => {
 
 // Soft delete an assignment (accessible to the course instructor only)
 const deleteAssignment = async (req, res) => {
-    const { id } = req.params;
+    const { assignid } = req.body;
     const requestingUser = req.user;
 
     try {
-        const assignment = await fetch.fetchAssignments().where({ assignid: id }).first();
+        const assignment = await fetch.fetchAssignments().where({ assignid: assignid }).first();
         if (!assignment) {
             return res.status(404).json({ error: 'Assignment not found' });
         }
@@ -82,7 +82,7 @@ const deleteAssignment = async (req, res) => {
             return res.status(403).json({ error: 'Access denied. Only the course instructor can delete this assignment.' });
         }
 
-        const updatedCount = await del.deleteAssignment(id);
+        const updatedCount = await del.deleteAssignment(assignid);
         if (updatedCount === 0) {
             return res.status(404).json({ error: 'Assignment not found or already deleted' });
         }

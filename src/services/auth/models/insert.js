@@ -112,12 +112,21 @@ const insertSubmission = async (submissionData) => {
 
     try {
         return await knex.transaction(async (trx) => {
-            // Insert submission
+            // 1. Get course ID for the assignment
+            const assignment = await trx('assignments')
+                .where('assignid', assignid)
+                .first('courseid');
+
+            if (!assignment) {
+                throw new Error('Assignment not found');
+            }
+
+            // 2. Insert submission and return the row (✅ PostgreSQL-safe)
             const [submission] = await trx('submissions')
                 .insert({
-                    assignid: assignid,
-                    userid: userid,
-                    file: file,
+                    assignid,
+                    userid,
+                    file,
                     submissiondate: knex.fn.now(),
                     grade: null
                 })
@@ -125,52 +134,74 @@ const insertSubmission = async (submissionData) => {
 
             const submissionid = submission.submissionid;
 
-            // Get enrolled students for the course
+            // 3. Get enrolled students (excluding submitter)
             const enrolledStudents = await trx('enrollments')
                 .join('users', 'enrollments.userid', '=', 'users.userid')
-                .where('enrollments.courseid', function () {
-                    this.select('courseid').from('assignments').where('assignid', assignid);
-                })
+                .where('enrollments.courseid', assignment.courseid)
+                .whereNot('users.userid', userid)
                 .select('users.userid', 'users.name');
 
-            // Find students who have reviewed fewer than 3 submissions
-            const eligibleStudents = await trx('users')
-                .whereIn('userid', enrolledStudents.map(s => s.userid))
-                .whereNotIn('userid', function () {
-                    this.select('reviewedbyid')
-                        .from('review')
-                        .groupBy('reviewedbyid')
-                        .havingRaw('COUNT(reviewid) >= 3'); // Exclude those who have reviewed 3 submissions
-                })
-                .select('userid', 'name');
+            // 4. Get review counts for each student for this assignment
+            const reviewCounts = await trx('review')
+                .join('submissions', 'review.submissionid', 'submissions.submissionid')
+                .where('submissions.assignid', assignid)
+                .groupBy('review.reviewedbyid')
+                .select('review.reviewedbyid', knex.raw('COUNT(review.reviewid) as count'));
 
-            let assignedReviewers = [];
+            const reviewCountMap = _.keyBy(reviewCounts, 'reviewedbyid');
 
-            //Randomly pick 3 reviewers
-            if (eligibleStudents.length >= 3) {
-                assignedReviewers = eligibleStudents
-                    .sort(() => Math.random() - 0.5) // Shuffle the list
-                    .slice(0, 3); // Pick first 3
+            // 5. Filter eligible students with < 3 reviews
+            let eligibleStudents = enrolledStudents.filter(student => {
+                const count = reviewCountMap[student.userid]?.count || 0;
+                return count < 3;
+            });
 
-                // Insert into `review` table
-                const peerReviews = assignedReviewers.map((reviewer) => ({
-                    submissionid: submissionid,
-                    reviewedbyid: reviewer.userid,
-                    reviewdate: knex.fn.now()
-                }));
+            // 6. Fallback: if all have ≥ 3 reviews, assign randomly from full pool
+            if (eligibleStudents.length === 0) {
+                eligibleStudents = enrolledStudents;
+            }
 
+            // 7. Pick up to 3 reviewers
+            const assignedReviewers = _.sampleSize(eligibleStudents, Math.min(3, eligibleStudents.length));
+
+            // 8. Avoid duplicate review entries
+            const peerReviews = [];
+
+            for (const reviewer of assignedReviewers) {
+                const alreadyAssigned = await trx('review')
+                    .where({ submissionid: submissionid, reviewedbyid: reviewer.userid })
+                    .first();
+
+                if (!alreadyAssigned) {
+                    peerReviews.push({
+                        submissionid: submissionid,
+                        reviewedbyid: reviewer.userid,
+                        reviewdate: knex.fn.now()
+                    });
+                }
+            }
+
+            if (peerReviews.length > 0) {
                 await trx('review').insert(peerReviews);
             }
 
+            if (!submission || !submission.file) {
+                throw new Error('submission or submission.file is undefined');
+            }
+
             return {
-                submission,
-                assignedReviewers
+                message: 'Submission created successfully',
+                file: submission.file,
+                grade: submission.grade,
+                reviews: assignedReviewers.map(r => _.pick(r, ['userid', 'name']))
             };
         });
     } catch (error) {
-        throw new Error(`Error inserting submission and assigning reviewers: ${error.message}`);
+        console.error('Error inserting submission:', error);
+        throw new Error('Error inserting submission: ' + error.message);
     }
 };
+
 
 // Function to create an assignment and rubrics
 const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
@@ -188,11 +219,10 @@ const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
             const { assignid } = assignment;
             // const rubricEntries = [];
 
-            console.log('rubricsData: ', rubricsData);
+
 
             const rubricEntries = await Promise.all(rubricsData.map(async (rubric) => {
                 let criteriaid = rubric.criteriaid;
-                console.log('criteriaid from rubric: ', criteriaid);
                 if (!criteriaid) {
                     // If criteriaId is not provided, check if criteria already exists
                     const { criterianame, description } = rubric;
@@ -212,7 +242,6 @@ const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
                     }
                 }
 
-                console.log('here');
                 // Return rubric entry
                 return {
                     assignid,
@@ -247,6 +276,65 @@ const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
     }
 };
 
+const insertPeerfeedback = async (feedbackData) => {
+    const { submissionId, reviewedById, feedback, feedbackMedia, score } = feedbackData;
+
+    if (!submissionId || !reviewedById || score === undefined) {
+        throw new Error('Submission ID, Reviewed By ID, and Score are required.');
+    }
+
+    if (typeof score !== 'number' || isNaN(score) || score < 0 || score > 10) {
+        throw new Error('Score must be a number between 0 and 10.');
+    }
+
+    if (!feedback || feedback.trim() === '') {
+        throw new Error('Feedback cannot be empty.');
+    }
+
+    return await knex.transaction(async (trx) => {
+        // Step 1: Ensure reviewer is assigned to this submission
+        const existingReview = await trx('review')
+            .where({
+                submissionid: submissionId,
+                reviewedbyid: reviewedById
+            })
+            .first();
+
+        if (!existingReview) {
+            throw new Error('Reviewer is not assigned to this submission.');
+        }
+
+        // Prevent duplicate submission
+        if (existingReview.feedback || existingReview.score !== null) {
+            throw new Error('Feedback has already been submitted for this review.');
+        }
+
+        // Step 2: Prevent self-review
+        const submission = await trx('submissions')
+            .where({ submissionid: submissionId })
+            .select('userid')
+            .first();
+
+        if (!submission) {
+            throw new Error('Submission not found.');
+        }
+
+        if (submission.userid === reviewedById) {
+            throw new Error('You cannot review your own submission.');
+        }
+        // Step 3: Update feedback details in Review table
+        await trx('review')
+            .where({ submissionid: submissionId, reviewedbyid: reviewedById })
+            .update({
+                feedback,
+                feedbackmedia: feedbackMedia,
+                score,
+                reviewdate: knex.fn.now()
+            });
+
+        return { message: 'Peer feedback submitted successfully' };
+    });
+};
 
 
 module.exports = {
@@ -257,5 +345,6 @@ module.exports = {
     insertRubric,
     insertCriteria,
     insertSubmission,
-    insertAssignmentWithRubrics
+    insertAssignmentWithRubrics,
+    insertPeerfeedback
 };

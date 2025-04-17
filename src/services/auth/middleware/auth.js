@@ -12,8 +12,6 @@ const authenticateToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        console.log('Decoded JWT:', decoded);
-
         req.user = decoded; // Attach user info (id, role) to the request
         next(); // Call next() to pass control to the next middleware or route handler
     } catch (error) {

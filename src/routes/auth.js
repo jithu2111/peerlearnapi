@@ -60,16 +60,12 @@ router.post('/createCriteria', authenticate, async (req, res) => {
 router.post('/createSubmission', authenticate, async (req, res) => {
     try {
         const result = await insert.insertSubmission(req.body);
-        res.status(201).json({
-            message: 'Submission created successfully',
-            file: result.submission.file,
-            grade: result.submission.grade,
-            reviews: result.assignedReviewers
-        });
+        res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
+
 
 router.post('/createAssignmentWithRubrics', authenticate, async (req, res) => {
     try {
@@ -89,6 +85,37 @@ router.post('/registerCourse', authenticate, async (req, res) => {  // Now your 
         res.status(500).json({ error: error.message });
     }
 });
+
+router.post('/getSubmissionsToReviewByUserID', authenticate, async (req, res) => {
+    try {
+        const response = await fetch.getSubmissionsToReviewByUserID(req, res);
+        return response;
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/createPeerfeedback', async (req, res) => {
+    try {
+        const result = await insert.insertPeerfeedback(req.body); // call the model
+        res.status(201).json(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+router.post('/getReviewsBySubmissionId', async (req, res) => {
+    try {
+        const { submissionid } = req.body;
+
+        const result = await fetch.getReviewsBySubmissionId(submissionid);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+
 
 // Fetch Routes
 router.get('/users/:id', authenticate, async (req, res) => {

@@ -127,15 +127,13 @@ const insertCriteria = async (criteriaData) => {
 // Controller function to create a submission
 const insertSubmission = async (submissionData) => {
     try {
-        const submission = await insert.insertSubmission(submissionData);
-        return {
-            submission,
-            assignedReviewers
-        };
+        const result = await insert.insertSubmission(submissionData);
+        return result;
     } catch (error) {
         throw new Error('Error inserting submission: ' + error.message);
     }
 };
+
 
 
 // Controller function to create a rubric
@@ -157,6 +155,16 @@ const insertAssignmentWithRubrics = async (assignmentData, rubricsData) => {
     }
 };
 
+const insertPeerfeedback = async (feedbackData) => {
+    try {
+        const result = await insert.insertPeerfeedback(feedbackData);
+        return result;
+
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 module.exports = {
     insertUser,
     insertCourse,
@@ -165,5 +173,6 @@ module.exports = {
     insertCriteria,
     insertSubmission,
     insertRubric,
-    insertAssignmentWithRubrics
+    insertAssignmentWithRubrics,
+    insertPeerfeedback
 };
