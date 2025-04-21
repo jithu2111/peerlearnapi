@@ -15,6 +15,8 @@ exports.login = async (req, res) => {
         // Fetch user from DB
         const user = await fetch.fetchUserByEmail({ email });
 
+        console.log("user: ", user)
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid email or password' });
@@ -28,7 +30,13 @@ exports.login = async (req, res) => {
         );
 
         // Return token to the client
-        res.status(200).json({ message: 'Login successful', token });
+        res.status(200).json({
+                message: 'Login successful',
+                username: user.name,
+                role: user.role,
+                email: user.email,
+                token
+        });
 
     } catch (error) {
         console.error(error);

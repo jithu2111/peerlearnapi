@@ -24,7 +24,7 @@ router.post('/insertUser', authenticate, async (req, res) => {
 
 router.post('/insertCourse', authenticate, async (req, res) => {
     try {
-        const course = await insert.insertCourse(req.body, res);
+        const course = await insert.insertCourse(req, res);
         return course;
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -150,6 +150,12 @@ router.get('/assignments/:id', authenticate, async (req, res) => {
 router.get('/fetchcoursesbyuserid', authenticate, async (req, res) => {
     try {
         const courses = await fetch.fetchCoursesByUserId(req, res);
+        //fetch authorization token from headers
+        const courses = await fetch.fetchCoursesByUserId(req,res);
+        if (!courses || courses.length === 0) {
+            return res.status(404).json({ message: 'No courses found for the given user ID' });
+        }
+        res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

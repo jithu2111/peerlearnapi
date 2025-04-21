@@ -138,6 +138,15 @@ const fetchUserByEmail = async ({ email } ) => {
 const fetchCoursesByUserId = async (req, res) => {
     try {
         const id = req.user.id;
+        const role = req.user.role;
+
+        if(role == 'Instructor'){
+            const course = await fetch.fetchCourseByInstructorId(id);
+            if (!course) {
+                return res.status(404).json({ message: 'Course not found' });
+            }
+            res.status(200).json(course);
+        }
         const course = await fetch.fetchCourseByUserId(id);
         if (!course) {
             return res.status(404).json({ message: 'Course not found' });
