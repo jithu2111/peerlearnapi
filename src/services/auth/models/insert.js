@@ -103,11 +103,11 @@ const insertCriteria = async (criteriaData) => {
     }
 };
 
-const insertSubmission = async (submissionData) => {
-    const { assignid, userid, file } = submissionData;
+const insertSubmission = async (submissionData, file) => {
+    const { assignid, userid } = submissionData;
 
-    if (!assignid || !userid || !file) {
-        throw new Error('Assignment ID, Student ID, and file are required.');
+    if (!assignid || !userid || !file || !file.buffer) {
+        throw new Error('Assignment ID, Student ID, and valid file are required.');
     }
 
     try {
@@ -121,86 +121,111 @@ const insertSubmission = async (submissionData) => {
                 throw new Error('Assignment not found');
             }
 
-            // 2. Insert submission and return the row (✅ PostgreSQL-safe)
-            const [submission] = await trx('submissions')
-                .insert({
-                    assignid,
-                    userid,
-                    file,
-                    submissiondate: knex.fn.now(),
-                    grade: null
-                })
-                .returning(['submissionid', 'assignid', 'userid', 'file', 'submissiondate', 'grade']);
+            // 2. Check if submission already exists
+            const existing = await trx('submissions')
+                .where({ assignid, userid })
+                .first();
+
+            let submission;
+            if (existing) {
+
+                console.log('existing submission: ', existing);
+                // 3a. Update existing submission
+                [submission] = await trx('submissions')
+                    .where({ assignid, userid })
+                    .update({
+                        filedata: file.buffer,
+                        file: file.originalname,
+                        mimetype: file.mimetype,
+                        submissiondate: knex.fn.now(),
+                        grade: null
+                    })
+                    .returning(['submissionid', 'assignid', 'userid', 'file', 'filedata', 'mimetype', 'submissiondate', 'grade']);
+            } else {
+                // 3b. Insert new submission
+                [submission] = await trx('submissions')
+                    .insert({
+                        assignid,
+                        userid,
+                        filedata: file.buffer,
+                        file: file.originalname,
+                        mimetype: file.mimetype,
+                        submissiondate: knex.fn.now(),
+                        grade: null
+                    })
+                    .returning(['submissionid', 'assignid', 'userid', 'file', 'submissiondate', 'grade']);
+            }
 
             const submissionid = submission.submissionid;
 
-            // 3. Get enrolled students (excluding submitter)
-            const enrolledStudents = await trx('enrollments')
-                .join('users', 'enrollments.userid', '=', 'users.userid')
-                .where('enrollments.courseid', assignment.courseid)
-                .whereNot('users.userid', userid)
-                .select('users.userid', 'users.name');
+            // 4. Assign reviewers only on first submission
+            if (!existing) {
+                const enrolledStudents = await trx('enrollments')
+                    .join('users', 'enrollments.userid', '=', 'users.userid')
+                    .where('enrollments.courseid', assignment.courseid)
+                    .whereNot('users.userid', userid)
+                    .select('users.userid', 'users.name');
 
-            // 4. Get review counts for each student for this assignment
-            const reviewCounts = await trx('review')
-                .join('submissions', 'review.submissionid', 'submissions.submissionid')
-                .where('submissions.assignid', assignid)
-                .groupBy('review.reviewedbyid')
-                .select('review.reviewedbyid', knex.raw('COUNT(review.reviewid) as count'));
+                const reviewCounts = await trx('review')
+                    .join('submissions', 'review.submissionid', 'submissions.submissionid')
+                    .where('submissions.assignid', assignid)
+                    .groupBy('review.reviewedbyid')
+                    .select('review.reviewedbyid', knex.raw('COUNT(review.reviewid) as count'));
 
-            const reviewCountMap = _.keyBy(reviewCounts, 'reviewedbyid');
+                const reviewCountMap = _.keyBy(reviewCounts, 'reviewedbyid');
 
-            // 5. Filter eligible students with < 3 reviews
-            let eligibleStudents = enrolledStudents.filter(student => {
-                const count = reviewCountMap[student.userid]?.count || 0;
-                return count < 3;
-            });
+                let eligibleStudents = enrolledStudents.filter(student => {
+                    const count = reviewCountMap[student.userid]?.count || 0;
+                    return count < 3;
+                });
 
-            // 6. Fallback: if all have ≥ 3 reviews, assign randomly from full pool
-            if (eligibleStudents.length === 0) {
-                eligibleStudents = enrolledStudents;
-            }
-
-            // 7. Pick up to 3 reviewers
-            const assignedReviewers = _.sampleSize(eligibleStudents, Math.min(3, eligibleStudents.length));
-
-            // 8. Avoid duplicate review entries
-            const peerReviews = [];
-
-            for (const reviewer of assignedReviewers) {
-                const alreadyAssigned = await trx('review')
-                    .where({ submissionid: submissionid, reviewedbyid: reviewer.userid })
-                    .first();
-
-                if (!alreadyAssigned) {
-                    peerReviews.push({
-                        submissionid: submissionid,
-                        reviewedbyid: reviewer.userid,
-                        reviewdate: knex.fn.now()
-                    });
+                if (eligibleStudents.length === 0) {
+                    eligibleStudents = enrolledStudents;
                 }
-            }
 
-            if (peerReviews.length > 0) {
-                await trx('review').insert(peerReviews);
-            }
+                const assignedReviewers = _.sampleSize(eligibleStudents, Math.min(3, eligibleStudents.length));
+                const peerReviews = [];
 
-            if (!submission || !submission.file) {
-                throw new Error('submission or submission.file is undefined');
-            }
+                for (const reviewer of assignedReviewers) {
+                    const alreadyAssigned = await trx('review')
+                        .where({ submissionid, reviewedbyid: reviewer.userid })
+                        .first();
 
-            return {
-                message: 'Submission created successfully',
-                file: submission.file,
-                grade: submission.grade,
-                reviews: assignedReviewers.map(r => _.pick(r, ['userid', 'name']))
-            };
+                    if (!alreadyAssigned) {
+                        peerReviews.push({
+                            submissionid,
+                            reviewedbyid: reviewer.userid,
+                            reviewdate: knex.fn.now()
+                        });
+                    }
+                }
+
+                if (peerReviews.length > 0) {
+                    await trx('review').insert(peerReviews);
+                }
+
+                return {
+                    message: 'Submission created successfully',
+                    file: submission.file,
+                    grade: submission.grade,
+                    reviews: assignedReviewers.map(r => _.pick(r, ['userid', 'name']))
+                };
+            } else {
+                return {
+                    message: 'Submission updated successfully',
+                    file: submission.file,
+
+                    grade: submission.grade,
+                    reviews: []
+                };
+            }
         });
     } catch (error) {
-        console.error('Error inserting submission:', error);
+        console.error('❌ Error inserting submission:', error);
         throw new Error('Error inserting submission: ' + error.message);
     }
 };
+
 
 
 // Function to create an assignment and rubrics

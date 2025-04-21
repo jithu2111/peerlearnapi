@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() }); // ✅ This is key
 const insert = require('../services/auth/controllers/insert');
 const fetch = require('../services/auth/controllers/fetch');
 const update = require('../services/auth/controllers/update');
@@ -57,9 +58,10 @@ router.post('/createCriteria', authenticate, async (req, res) => {
     }
 });
 
-router.post('/createSubmission', authenticate, async (req, res) => {
+router.post('/createSubmission', authenticate, upload.single('file'), async (req, res) => {
     try {
-        const result = await insert.insertSubmission(req.body);
+        const file = req.file;
+        const result = await insert.insertSubmission(req.body, file);
         res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -127,6 +129,14 @@ router.get('/users/:id', authenticate, async (req, res) => {
     }
 });
 
+router.get('/course/:id', authenticate, async (req, res) => {
+    try {
+        const course = await fetch.fetchCourseById(req,res);
+        res.json(course);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 router.get('/assignments/:id', authenticate, async (req, res) => {
     try {
@@ -139,6 +149,7 @@ router.get('/assignments/:id', authenticate, async (req, res) => {
 
 router.get('/fetchcoursesbyuserid', authenticate, async (req, res) => {
     try {
+        const courses = await fetch.fetchCoursesByUserId(req, res);
         //fetch authorization token from headers
         const courses = await fetch.fetchCoursesByUserId(req,res);
         if (!courses || courses.length === 0) {
@@ -147,6 +158,55 @@ router.get('/fetchcoursesbyuserid', authenticate, async (req, res) => {
         res.status(200).json(courses);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+router.post('/fetchSubmissionbyId', authenticate, async (req, res) => {
+    try{
+        const submission = await fetch.fetchSubmissionById(req, res);
+        return submission;
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.get('/fetchAllCourses', authenticate, async (req, res) => {
+    try{
+        await fetch.fetchAllCourses(req, res);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.get('/fetchAssignmentsByUserId', authenticate, async (req, res) => {
+    try{
+        await fetch.fetchAssignmentsByUserId(req, res);
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/fetchGradesByCourseAndAssignmentId', authenticate, async (req, res) => {
+    try{
+        await fetch.fetchGradesByCourseAndAssignmentId(req, res);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+router.post('/fetchAssignmentsToPeerReviewByUserId', authenticate, async (req, res) => {
+    try{
+        await fetch.fetchAssignmentsToPeerReviewByUserId(req, res);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/fetchSubmissionByUserAndAssignment', authenticate, async (req, res) => {
+    try{
+        await fetch.fetchSubmissionByUserAndAssignment(req, res);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
@@ -214,6 +274,16 @@ router.put('/assignments/:id', authenticate, async (req, res) => {
     }
 });
 
+router.put('/archiveCourse', authenticate, async (req, res) => {
+    try{
+        const ans = await update.archiveCourse(req, res);
+        res.status(200).json(ans);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
+
 // Delete Routes
 router.delete('/users/:id', authenticate, async (req, res) => {
     try {
@@ -247,3 +317,4 @@ router.post('/signup', authService.signup);
 
 
 module.exports = router;
+

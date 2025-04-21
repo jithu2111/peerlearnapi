@@ -37,6 +37,18 @@ const fetchUserById = async (req, res) => {
     }
 };
 
+const fetchCourseById  = async (req, res) => {
+    const { id } = req.params;
+    const requestingUser = req.user;
+
+    try{
+        const course = await fetch.fetchCourseById(id, requestingUser);
+        return course;
+    } catch (error) {
+        logger.error(`Error fetching course by ID ${id}: ${error.message}`);
+    }
+};
+
 // Fetch users by role (accessible to Instructors only)
 const fetchUsersByRole = async (req, res) => {
     const { role } = req.query;
@@ -92,7 +104,6 @@ const fetchAssignments = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 // Fetch enrollments for a specific user (accessible to the user themselves or Instructors)
 const fetchStudentsByCourseId = async (req, res) => {
     const { userId } = req.params;
@@ -143,6 +154,84 @@ const fetchCoursesByUserId = async (req, res) => {
         res.status(200).json(course);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchSubmissionById = async (req, res) => {
+    const { assignId, submissionId } = req.body;
+    try{
+        console.log(assignId);
+        console.log(submissionId);
+        const assignmentDetails = await fetch.fetchAssignmentById(assignId);
+        const submissionDetails = await fetch.fetchSubmissionById(submissionId);
+        res.status(200).json({
+            assignmentDetails,
+            submissionDetails,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchAllCourses = async (req, res) => {
+    try{
+        const courses = await fetch.fetchAllCourses();
+        res.status(200).json(courses);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchAssignmentsByUserId = async (req, res) => {
+    try{
+        const id = req.user.id;
+        const assignments = await fetch.fetchAssignmentsByUserId(id);
+        if(!assignments) {
+            return res.status(404).json({ message: 'Assignments not found' });
+        }
+        res.status(200).json(assignments);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchGradesByCourseAndAssignmentId = async (req, res) => {
+    try{
+        const { courseId, assignId } = req.body;
+        const grades = await fetch.fetchGradesByCourseAndAssignmentId(courseId, assignId);
+        if(!grades) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+        res.status(200).json(grades);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchAssignmentsToPeerReviewByUserId = async (req, res) => {
+    try{
+        const id = req.user.id;
+        const assignmentsToPeerReview = await fetch.fetchAssignmentsToPeerReviewByUserId(id);
+        if(!assignmentsToPeerReview) {
+            return res.status(404).json({ message: 'Assignments not found' });
+        }
+        res.status(200).json(assignmentsToPeerReview);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const fetchSubmissionByUserAndAssignment = async (req, res) => {
+    try{
+        const assignmentId = req.body.id;
+        const userId = req.user.id;
+        const assignment = await fetch.fetchSubmissionByUserAndAssignment(assignmentId, userId);
+        if(!assignment) {
+            return res.status(404).json({ message: 'Assignment not found' });
+        }
+        res.status(200).json(assignment);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -205,7 +294,14 @@ module.exports = {
     fetchCourses,
     fetchAssignments,
     fetchStudentsByCourseId,
+    fetchAssignmentsByUserId,
     fetchCoursesByUserId,
+    fetchAssignmentsToPeerReviewByUserId,
+    fetchSubmissionByUserAndAssignment,
+    fetchSubmissionById,
+    fetchCourseById,
+    fetchAllCourses,
+    fetchGradesByCourseAndAssignmentId,
     fetchUserByEmail,
     fetchCriteriaByCourseId,
     getRubricByAssignmentId,

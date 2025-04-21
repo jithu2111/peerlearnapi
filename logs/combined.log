@@ -93,3 +93,72 @@
 {"level":"error","message":"Error fetching user by email saketh@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:51.727Z"}
 {"level":"error","message":"Error fetching user by email murali@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:25:49.756Z"}
 {"level":"info","message":"User inserted: 30","timestamp":"2025-04-02T01:02:52.109Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:05:24.157Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:10:02.158Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:14:26.877Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:19:04.265Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:20:52.015Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:22:18.808Z"}
+{"level":"info","message":"User inserted: 31","timestamp":"2025-04-17T03:27:02.202Z"}
+{"level":"info","message":"User inserted: 32","timestamp":"2025-04-17T03:43:44.287Z"}
+{"level":"info","message":"User inserted: 33","timestamp":"2025-04-17T03:59:37.189Z"}
+{"level":"info","message":"User inserted: 34","timestamp":"2025-04-17T06:36:01.617Z"}
+{"level":"info","message":"User inserted: 35","timestamp":"2025-04-18T02:29:36.787Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T19:22:59.420Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T19:22:59.424Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:22:26.367Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:22:26.372Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:35:34.352Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:35:34.356Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:54:06.597Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:54:06.602Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:55:30.208Z"}
+{"level":"error","message":"Error fetching course by ID 1: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:56:38.496Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:56:52.978Z"}
+{"level":"info","message":"Course inserted: 11","timestamp":"2025-04-20T06:40:45.869Z"}
+{"level":"info","message":"Course inserted: 12","timestamp":"2025-04-20T07:29:53.529Z"}
+{"level":"info","message":"Enrollment inserted: 23","timestamp":"2025-04-20T14:59:45.720Z"}
+{"level":"info","message":"Enrollment inserted: 24","timestamp":"2025-04-20T15:21:59.767Z"}
+{"level":"info","message":"User inserted: 36","timestamp":"2025-04-20T17:33:01.496Z"}
+{"level":"info","message":"Enrollment inserted: 25","timestamp":"2025-04-20T17:33:23.086Z"}
+{"level":"info","message":"Enrollment inserted: 26","timestamp":"2025-04-20T17:40:27.478Z"}
+{"level":"info","message":"User inserted: 37","timestamp":"2025-04-20T17:42:35.561Z"}
+{"level":"info","message":"Enrollment inserted: 27","timestamp":"2025-04-20T17:42:55.792Z"}
+{"level":"info","message":"Enrollment inserted: 28","timestamp":"2025-04-20T17:43:07.142Z"}
+{"level":"info","message":"Enrollment inserted: 29","timestamp":"2025-04-20T17:48:27.923Z"}
+{"level":"info","message":"User inserted: 38","timestamp":"2025-04-20T17:51:47.021Z"}
+{"level":"info","message":"Enrollment inserted: 30","timestamp":"2025-04-20T17:52:06.422Z"}
+{"level":"info","message":"Enrollment inserted: 31","timestamp":"2025-04-20T17:52:23.108Z"}
+{"level":"info","message":"User inserted: 39","timestamp":"2025-04-20T17:54:37.551Z"}
+{"level":"info","message":"User inserted: 40","timestamp":"2025-04-20T17:56:01.105Z"}
+{"level":"info","message":"Enrollment inserted: 32","timestamp":"2025-04-20T17:56:18.934Z"}
+{"level":"info","message":"Enrollment inserted: 33","timestamp":"2025-04-20T17:56:27.907Z"}
+{"level":"info","message":"User inserted: 41","timestamp":"2025-04-20T18:25:02.840Z"}
+{"level":"info","message":"Enrollment inserted: 34","timestamp":"2025-04-20T18:25:19.235Z"}
+{"level":"info","message":"Enrollment inserted: 35","timestamp":"2025-04-20T18:25:28.075Z"}
+{"level":"info","message":"User inserted: 42","timestamp":"2025-04-20T19:01:58.275Z"}
+{"level":"info","message":"Enrollment inserted: 36","timestamp":"2025-04-20T19:02:18.722Z"}
+{"level":"info","message":"Enrollment inserted: 37","timestamp":"2025-04-20T19:02:28.792Z"}
+{"level":"info","message":"User inserted: 43","timestamp":"2025-04-20T19:05:04.104Z"}
+{"level":"info","message":"Enrollment inserted: 38","timestamp":"2025-04-20T19:05:30.369Z"}
+{"level":"info","message":"Enrollment inserted: 39","timestamp":"2025-04-20T19:05:45.381Z"}
+{"level":"info","message":"User inserted: 44","timestamp":"2025-04-20T19:09:07.828Z"}
+{"level":"info","message":"Course inserted: 13","timestamp":"2025-04-20T19:16:08.580Z"}
+{"level":"info","message":"Course inserted: 14","timestamp":"2025-04-20T19:22:09.488Z"}
+{"level":"info","message":"Course inserted: 15","timestamp":"2025-04-20T19:26:16.863Z"}
+{"level":"info","message":"Course inserted: 16","timestamp":"2025-04-20T19:35:41.218Z"}
+{"level":"error","message":"Error fetching course by ID DBMS: select \"courseid\", \"coursename\", \"startdate\", \"enddate\", \"isarchived\" from \"courses\" where \"courseid\" = $1 and \"isdeleted\" = $2 limit $3 - invalid input syntax for type integer: \"DBMS\"","timestamp":"2025-04-20T20:02:18.092Z"}
+{"level":"info","message":"User inserted: 45","timestamp":"2025-04-20T21:18:32.934Z"}
+{"level":"info","message":"Course inserted: 17","timestamp":"2025-04-20T21:19:09.711Z"}
+{"level":"info","message":"User inserted: 46","timestamp":"2025-04-20T21:57:09.493Z"}
+{"level":"info","message":"User inserted: 47","timestamp":"2025-04-20T21:58:45.878Z"}
+{"level":"info","message":"Enrollment inserted: 45","timestamp":"2025-04-20T21:59:24.559Z"}
+{"level":"info","message":"Enrollment inserted: 46","timestamp":"2025-04-20T21:59:38.159Z"}
+{"level":"info","message":"User inserted: 48","timestamp":"2025-04-20T22:01:28.157Z"}
+{"level":"info","message":"Enrollment inserted: 47","timestamp":"2025-04-20T22:01:56.284Z"}
+{"level":"info","message":"Enrollment inserted: 48","timestamp":"2025-04-20T22:02:11.307Z"}
+{"level":"info","message":"User inserted: 49","timestamp":"2025-04-20T22:04:23.641Z"}
+{"level":"info","message":"Enrollment inserted: 49","timestamp":"2025-04-20T22:04:52.255Z"}
+{"level":"info","message":"Enrollment inserted: 50","timestamp":"2025-04-20T22:05:05.118Z"}
+{"level":"info","message":"Course inserted: 18","timestamp":"2025-04-21T00:56:41.863Z"}
+{"level":"info","message":"Course inserted: 19","timestamp":"2025-04-21T00:59:52.213Z"}

@@ -37,6 +37,7 @@ const insertCourse = async (req, res) => {
         }
 
         const course = await insert.insertCourse(courseName, instructorID, startDate, endDate, isArchived);
+        const enrollment = await insert.insertEnrollment(instructorID, course[0].courseid);
         logger.info(`Course inserted: ${course[0].courseid}`);
         res.status(201).json(course[0]);
     } catch (error) {
@@ -125,9 +126,9 @@ const insertCriteria = async (criteriaData) => {
 };
 
 // Controller function to create a submission
-const insertSubmission = async (submissionData) => {
+const insertSubmission = async (submissionData, file) => {
     try {
-        const result = await insert.insertSubmission(submissionData);
+        const result = await insert.insertSubmission(submissionData, file);
         return result;
     } catch (error) {
         throw new Error('Error inserting submission: ' + error.message);
@@ -159,7 +160,6 @@ const insertPeerfeedback = async (feedbackData) => {
     try {
         const result = await insert.insertPeerfeedback(feedbackData);
         return result;
-
     } catch (error) {
         throw new Error(error.message);
     }
