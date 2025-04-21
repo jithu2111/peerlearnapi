@@ -33,3 +33,21 @@
 {"level":"error","message":"Error fetching user by email smadhira1@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:09.647Z"}
 {"level":"error","message":"Error fetching user by email saketh@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:21:51.727Z"}
 {"level":"error","message":"Error fetching user by email murali@student.gsu.edu: getaddrinfo ENOTFOUND db.txunrdefwgxgkhndfeaq.supabase.co","timestamp":"2025-04-01T19:25:49.756Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:05:24.157Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:10:02.158Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:14:26.877Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:19:04.265Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:20:52.015Z"}
+{"level":"error","message":"Error inserting user: Invalid role. Valid roles are: Student, Grader, Instructor.","timestamp":"2025-04-17T03:22:18.808Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T19:22:59.420Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T19:22:59.424Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:22:26.367Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:22:26.372Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:35:34.352Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:35:34.356Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:54:06.597Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:54:06.602Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:55:30.208Z"}
+{"level":"error","message":"Error fetching course by ID 1: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:56:38.496Z"}
+{"level":"error","message":"Error fetching course by ID 3: fetch.fetchCourseById is not a function","timestamp":"2025-04-19T23:56:52.978Z"}
+{"level":"error","message":"Error fetching course by ID DBMS: select \"courseid\", \"coursename\", \"startdate\", \"enddate\", \"isarchived\" from \"courses\" where \"courseid\" = $1 and \"isdeleted\" = $2 limit $3 - invalid input syntax for type integer: \"DBMS\"","timestamp":"2025-04-20T20:02:18.092Z"}

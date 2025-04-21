@@ -143,8 +143,17 @@ const updateAssignment = async (req, res) => {
     }
 };
 
+const archiveCourse = async (req, res) => {
+    const id = req.body.courseid;
+    const status = req.body.status;
+    return await update.updateCourse(id, {
+        isarchived: status,
+    })
+}
+
 module.exports = {
     updateUser,
     updateCourse,
     updateAssignment,
+    archiveCourse
 };
